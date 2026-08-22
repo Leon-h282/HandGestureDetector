@@ -1,9 +1,9 @@
-*/
+*
 !models/
 !models/**
 
-!lables/
-!lables/**
+!labels/
+!labels/**
 
 !resources/
 !resources/**
@@ -11,7 +11,6 @@
 !voices/
 !voices/**
 
-*
 !.gitignore
 !_config.py
 !_detector.py
