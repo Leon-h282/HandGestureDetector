@@ -41,8 +41,8 @@ from PySide6.QtCore import Qt
 from PySide6.QtCore import QTimer
 from PySide6.QtGui  import QPixmap
 from PySide6.QtGui  import QImage
+from PySide6.QtGui  import QFont
 
-from PySide6.QtWidgets import QApplication
 from PySide6.QtWidgets import QLabel
 from PySide6.QtWidgets import QPushButton
 from PySide6.QtWidgets import QWidget
@@ -148,9 +148,11 @@ class Interface(QWidget):
 
         self.frame_count_bar = QProgressBar()
         self.frame_count_bar.setStyleSheet(CFG.bar_style)
+        self.frame_count_bar.setFixedWidth(CFG.barMinWidth)
         
         self.seq_count_bar = QProgressBar()
         self.seq_count_bar.setStyleSheet(CFG.bar_style)
+        self.seq_count_bar.setFixedWidth(CFG.barMinWidth)
 
         # CREATE LABEL PAGE
         self.page_create_file_layout.addStretch()
@@ -175,13 +177,18 @@ class Interface(QWidget):
 
         # DATA COLLECT PAGE
         self.page_collect_layout.addLayout(self.camera_layout)
+        self.page_collect_layout.addSpacing(10)
         self.page_collect_layout.addLayout(self.right_layout)
 
         self.camera_layout.addWidget(self.cameraLabel)
 
+        font = QFont("Arial", 16)
+        font.setBold(True)
 
         self.current_label = QLabel("Current label:")
+        self.current_label.setFont(font)
         self.right_layout.addWidget(self.current_label)
+
         self.right_layout.addWidget(QLabel("frame count"))
         self.right_layout.addWidget(self.frame_count_bar)
 
@@ -203,7 +210,6 @@ class Interface(QWidget):
         button_layout.addWidget(self.redo_btn)
 
         self.right_layout.addLayout(button_layout)
-
 
 
 # ----------------------------------------------------------

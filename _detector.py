@@ -265,14 +265,17 @@ class Interface(QWidget):
 
         bar1 = QProgressBar()
         bar1.setStyleSheet(CFG.bar_style)
+        bar1.setFixedWidth(CFG.barMinWidth)
         bar1.setValue(0)
         
         bar2 = QProgressBar()
         bar2.setStyleSheet(CFG.bar_style)
+        bar2.setFixedWidth(CFG.barMinWidth)
         bar2.setValue(0)
         
         bar3 = QProgressBar()
         bar3.setStyleSheet(CFG.bar_style)
+        bar3.setFixedWidth(CFG.barMinWidth)
         bar3.setValue(0)
 
         prob_lbl1 = QLabel()
