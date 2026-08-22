@@ -25,6 +25,8 @@ class config:
 
         self.inputSize    = (400, 30)
         self.button_width = 150
+
+        self.barMinWidth = self.default_frame_size[0]//5
         self.bar_style = """
             QProgressBar {
                 border: 1px solid #555;
