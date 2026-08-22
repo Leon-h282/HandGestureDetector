@@ -19,7 +19,7 @@
 
 !A_main.py
 
-!a1_data_collect.py
+!a1_data_collect_module.py
 !a2_model_training_module.py
 !b1_module1_single_sign.py
 !b2_module2_multi_signs.py
