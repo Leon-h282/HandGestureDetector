@@ -4,4 +4,4 @@ tensorflow==2.16.1
 scikit-learn==1.7.2
 numpy==1.26.4
 piper-tts
-requests
+pyside6
