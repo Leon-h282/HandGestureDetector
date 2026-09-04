@@ -56,7 +56,7 @@ Có 4 module chính:
 ### Xử lý dữ liệu
 - Dùng MediaPipe để trích xuất tọa độ của các landmark.
 
-- Lấy các tọa độ đã thu được cùng trừ cho một điểm duy nhất trong các landmark *(trong trường hợp này là pose landmark 0, tương ứng với vị trí của mũi)*.
+- Lấy các tọa độ đã thu được cùng trừ cho một điểm gốc *(tương ứng với vị trí của cổ tay đối với hand landmarks và vị trí mũi đối với pose landmarks)*.
 
 - Chia các giá trị vừa tính được cho giá trị tuyệt đối lớn nhất.
 
