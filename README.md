@@ -165,10 +165,7 @@ Module luồng chuyển chữ thành tiếng.
 Cài đặt:
 `pip install pyinstaller`
 
-Trong terminal, chạy lần lượt:
-```bash
-pyside6-rcc resources.qrc -o resources_rc.py
-```
+Trong terminal:
 ```bash
 pyinstaller A_main.py --name HandGestureDetector --windowed --onedir --collect-all mediapipe --collect-all tensorflow --collect-all piper --add-data "voices; voices"
 ```
