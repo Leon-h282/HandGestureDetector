@@ -305,7 +305,7 @@ class CollectModule(Interface):
 
     # khởi tạo đối tượng đọc camera
     def camera_init(self, frame_size: tuple = CFG.default_frame_size):
-        self.cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+        self.cap = cv2.VideoCapture(0)
         self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, frame_size[0])
         self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, frame_size[1])
 

@@ -97,7 +97,7 @@ class Detector:
         """
         frame_size có dạng (frame_width, frame_height)
         """
-        self.cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+        self.cap = cv2.VideoCapture(0)
         self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, frame_size[0])
         self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, frame_size[1])
 
