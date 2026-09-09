@@ -10,7 +10,7 @@
 
 ---
 
-## **Tổng quan sản phẩm**
+## Tổng quan sản phẩm
 Người dùng có thể tự thu thập dữ liệu và huấn luyện mô hình
 để nhận diện các ký hiệu riêng tùy theo nhu cầu sử dụng.
 
@@ -20,14 +20,14 @@ Hiện tại, sản phẩm đã có 2 chế độ là nhận diện ký hiệu �
 
 Output khi nhận diện ký hiệu bao gồm chữ hiển thị trên màn hình giao diện phần mềm và âm thanh phát ra loa.
 
-## **Ứng dụng**
+## Ứng dụng
 Sản phẩm hướng đến các tình huống sử dụng cụ thể, quy mô nhỏ như trường học, bệnh viện, các điểm dịch vụ công, ...
 
 Mô hình deep learning có thể được huấn luyện riêng cho từng đối tượng và môi trương sử dụng.
 
 ---
 
-## **Chi tiết sản phẩm**
+## Chi tiết sản phẩm
 
 Có 4 module chính:
 - Thu thập dữ liệu của các ký hiệu muốn dùng để nhận diện.
@@ -52,7 +52,7 @@ Có 4 module chính:
 
 ---
 
-## **Nguyên lý hoạt động**
+## Nguyên lý hoạt động
 ### Xử lý dữ liệu
 - Dùng MediaPipe để trích xuất tọa độ của các landmark.
 
@@ -76,7 +76,7 @@ Có 4 module chính:
 
 ---
 
-## **Mã nguồn**
+## Mã nguồn
 ### Cấu trúc dự án
 ```text
 d:/Project/
