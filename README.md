@@ -55,29 +55,21 @@ Có 4 module chính:
 ## Nguyên lý hoạt động
 ### Xử lý dữ liệu
 - Dùng MediaPipe để trích xuất tọa độ của các landmark.
-
 - Lấy các tọa độ đã thu được cùng trừ cho một điểm gốc *(tương ứng với vị trí của cổ tay đối với hand landmarks và vị trí mũi đối với pose landmarks)*.
-
 - Chia các giá trị vừa tính được cho giá trị tuyệt đối lớn nhất.
-
 - Mỗi khung hình đều sẽ bao gồm các dữ liệu trên, ghép các dữ liệu đã xử lý của các khung hình theo thứ tự thời gian để cho ra chuỗi dữ liệu.
 
 ### Huấn luyện mô hình
 **Kiến trúc mô hình:**
 - **BiLSTM**: Mô hình sẽ học chuỗi dữ liệu từ dataset theo cả chiều thuận *(quá khứ -> tương lai)* và chiều nghịch *(tương lai -> quá khứ)*.
-
 - **LSTM**: Layer lstm dùng để học các thông tin đặc trưng cuối cùng trước khi qua các fully-connected layer.
-
 - **BatchNormalization**: Ổn định các output của layer trước để tăng hiệu quả huấn luyện.
-
 - **Dropout**: Bỏ đi ngẫu nhiên (30%) các output của layer trước để tránh model học thuộc dư liệu (overfit).
-
 - **Dense** *(fully-connected layer)*: Phân loại các nhãn (các câu) thành dạng xác xuất để dự đoán câu.
 
 ---
 
-## Mã nguồn
-### Cấu trúc dự án
+## Cấu trúc dự án
 ```text
 d:/Project/
 │
@@ -129,7 +121,9 @@ d:/Project/
 └── requirements.txt
 ```
 
-### Yêu cầu hệ thống & cài đặt
+---
+
+## Yêu cầu hệ thống & cài đặt
 - `python >= 3.9`
 
 - `requirements.txt`
@@ -149,23 +143,31 @@ d:/Project/
 
 - Lưu **en_US-lessac-medium.onnx** và **en_US-lessac-medium.onnx.json** trong thư mục voices.
 
-### _detector.py
+---
+
+## Mã nguồn
+
+### `_detector.py`
 Module nhận diện ký hiệu từ model và nhãn đã được chọn.
 
-### _landmark_module.py
+### `_landmark_module.py`
 Module xử lý dữ liệu từ tọa độ của các điểm lanmarks và vẽ khung xương.
 
-### _tts_module.py
+### `_tts_module.py`
 Module luồng chuyển chữ thành tiếng.
 
-### Lệnh chạy scripts
-`python A_main.py`
+### Lệnh chạy chương trình
+```bash
+python A_main.py
+```
 
 ### Biên dịch mã nguồn sang file thực thi
-Cài đặt:
-`pip install pyinstaller`
+#### Cài đặt:
+```
+pip install pyinstaller
+```
 
-Trong terminal:
+#### Lệnh biên dịch:
 ```bash
 pyinstaller A_main.py --name HandGestureDetector --windowed --onedir --collect-all mediapipe --collect-all tensorflow --collect-all piper --add-data "voices; voices"
 ```
