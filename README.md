@@ -169,5 +169,5 @@ pip install pyinstaller
 
 #### Lệnh biên dịch:
 ```bash
-pyinstaller A_main.py --name HandGestureDetector --windowed --onedir --collect-all mediapipe --collect-all tensorflow --collect-all piper --add-data "voices; voices"
+pyinstaller A_main.py --name HandGestureDetector --windowed --onedir --collect-all mediapipe --collect-all tensorflow --collect-all piper --add-data "voices;voices"
 ```
