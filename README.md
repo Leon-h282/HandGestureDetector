@@ -154,7 +154,7 @@ Module nhận diện ký hiệu từ model và nhãn đã được chọn.
 Module xử lý dữ liệu từ tọa độ của các điểm lanmarks và vẽ khung xương.
 
 ### `_tts_module.py`
-Module luồng chuyển chữ thành tiếng.
+Module đọc văn bản thành tiếng.
 
 ### Lệnh chạy chương trình
 ```bash
