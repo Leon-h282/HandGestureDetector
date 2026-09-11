@@ -71,28 +71,14 @@ class Interface(QWidget):
         self.stack = QStackedWidget()
         self.mainLayout.addWidget(self.stack)
 
+        # ---------------------------------------
+        # TRANG 1 - TẠO FILE LƯU BỘ NHÃN
+        # ---------------------------------------
+        # Khởi tạo trang
         self.page_create_file = QWidget()
-        self.page_labeling    = QWidget()
-        self.page_num_sample  = QWidget()
-        self.page_collect     = QWidget()
-
         self.page_create_file_layout = QVBoxLayout(self.page_create_file)
-        self.page_labeling_layout    = QVBoxLayout(self.page_labeling)
-        self.page_num_sample_layout  = QVBoxLayout(self.page_num_sample)
-        self.page_collect_layout     = QHBoxLayout(self.page_collect)
 
-        self.stack.addWidget(self.page_create_file)
-        self.stack.addWidget(self.page_labeling)
-        self.stack.addWidget(self.page_num_sample)
-        self.stack.addWidget(self.page_collect)
-
-        self.cameraLabel = QLabel()
-        self.cameraLabel.setMinimumSize(
-            CFG.cameraFrameSize[0],
-            CFG.cameraFrameSize[1]
-        )
-
-        # Name label file
+        # Đặt tên cho file bộ nhãn
         self.label_name_input = QLineEdit()
         self.label_name_input.setFixedSize(
             CFG.inputSize[0],
@@ -100,14 +86,25 @@ class Interface(QWidget):
         )
         self.label_name_input.setPlaceholderText("Enter label file name")
 
-        # Save label file
+        # Lưu file bộ nhãn lần đầu tiên tạo
         self.save_label_file_btn1 = QPushButton("Save file")
         self.save_label_file_btn1.setFixedWidth(CFG.button_width)
 
-        self.save_label_file_btn2 = QPushButton("Save file")
-        self.save_label_file_btn2.setFixedWidth(CFG.button_width)
+        # Sắp xếp bố cục trang
+        self.page_create_file_layout.addStretch()
+        self.page_create_file_layout.addWidget(self.label_name_input)
+        self.page_create_file_layout.addWidget(self.save_label_file_btn1)
+        self.page_create_file_layout.addStretch()
 
-        # Enter label
+
+        # ---------------------------------------
+        # TRANG 2 - GHI NHÃN
+        # ---------------------------------------
+        # Khởi tạo trang
+        self.page_labeling = QWidget()
+        self.page_labeling_layout = QVBoxLayout(self.page_labeling)
+
+        # Nhập nhãn
         self.label_input = QLineEdit()
         self.label_input.setFixedSize(
             CFG.inputSize[0],
@@ -115,12 +112,28 @@ class Interface(QWidget):
         )
         self.label_input.setPlaceholderText("Enter your label")
 
-        # Confirm button
-        self.confirm_btn = QPushButton("Confirm")
-        self.confirm_btn.setFixedWidth(CFG.button_width)
+        # Xác nhận ghi nhãn
+        self.confirm_lb_btn = QPushButton("Confirm")
+        self.confirm_lb_btn.setFixedWidth(CFG.button_width)
 
-        self.num_samp_confirm_btn = QPushButton("Confirm")
-        self.num_samp_confirm_btn.setFixedWidth(CFG.button_width)
+        # Lưu file bộ nhãn sau khi ghi nhãn xong
+        self.save_label_file_btn2 = QPushButton("Save file")
+        self.save_label_file_btn2.setFixedWidth(CFG.button_width)
+
+        # Sắp xếp bố cục trang
+        self.page_labeling_layout.addStretch()
+        self.page_labeling_layout.addWidget(self.label_input)
+        self.page_labeling_layout.addWidget(self.confirm_lb_btn)
+        self.page_labeling_layout.addWidget(self.save_label_file_btn2)
+        self.page_labeling_layout.addStretch()
+
+
+        # ---------------------------------------
+        # TRANG 3 - CHỌN SỐ LƯỢNG MẪU
+        # ---------------------------------------
+        # Khởi tạo trang
+        self.page_num_sample = QWidget()
+        self.page_num_sample_layout = QVBoxLayout(self.page_num_sample)
 
         # Select number of samples
         self.num_sample_select = QSpinBox()
@@ -129,6 +142,31 @@ class Interface(QWidget):
         self.num_sample_select.setValue(CFG.minNumSample)
 
         self.num_sample_select.setFixedSize(100, 50)
+
+        # Xác nhận số lượng mẫu
+        self.num_samp_confirm_btn = QPushButton("Confirm")
+        self.num_samp_confirm_btn.setFixedWidth(CFG.button_width)
+
+        # Sắp xếp bố cục trang
+        self.page_num_sample_layout.addStretch()
+        self.page_num_sample_layout.addWidget(self.num_sample_select)
+        self.page_num_sample_layout.addWidget(self.num_samp_confirm_btn)
+        self.page_num_sample_layout.addStretch()
+
+
+        # ---------------------------------------
+        # TRANG 4 - GHI HÌNH
+        # ---------------------------------------
+        # Khởi tạo trang
+        self.page_collect = QWidget()
+        self.page_collect_layout = QHBoxLayout(self.page_collect)
+
+        # Khởi tạo khung hình camera
+        self.cameraLabel = QLabel()
+        self.cameraLabel.setMinimumSize(
+            CFG.cameraFrameSize[0],
+            CFG.cameraFrameSize[1]
+        )
 
         # Start collect button
         self.start_btn = QPushButton("Start")
@@ -154,39 +192,21 @@ class Interface(QWidget):
         self.seq_count_bar.setStyleSheet(CFG.bar_style)
         self.seq_count_bar.setFixedWidth(CFG.barMinWidth)
 
-        # CREATE LABEL PAGE
-        self.page_create_file_layout.addStretch()
-        self.page_create_file_layout.addWidget(self.label_name_input)
-        self.page_create_file_layout.addWidget(self.save_label_file_btn1)
-        self.page_create_file_layout.addStretch()
-
-        self.stack.setCurrentWidget(self.page_create_file)
-
-        # LABELING PAGE
-        self.page_labeling_layout.addStretch()
-        self.page_labeling_layout.addWidget(self.label_input)
-        self.page_labeling_layout.addWidget(self.confirm_btn)
-        self.page_labeling_layout.addWidget(self.save_label_file_btn2)
-        self.page_labeling_layout.addStretch()
-
-        # SET NUM-SAMPLE PAGE
-        self.page_num_sample_layout.addStretch()
-        self.page_num_sample_layout.addWidget(self.num_sample_select)
-        self.page_num_sample_layout.addWidget(self.num_samp_confirm_btn)
-        self.page_num_sample_layout.addStretch()
-
-        # DATA COLLECT PAGE
+        # Sắp xếp bố cục trang
         self.page_collect_layout.addLayout(self.camera_layout)
         self.page_collect_layout.addSpacing(10)
         self.page_collect_layout.addLayout(self.right_layout)
 
         self.camera_layout.addWidget(self.cameraLabel)
 
+        # Set font chữ
         font = QFont("Arial", 16)
         font.setBold(True)
 
         self.current_label = QLabel("Current label:")
         self.current_label.setFont(font)
+
+        # Sắp xếp các thành phần của SIDEBAR bên phải
         self.right_layout.addWidget(self.current_label)
 
         self.right_layout.addWidget(QLabel("frame count"))
@@ -201,6 +221,7 @@ class Interface(QWidget):
 
         self.right_layout.addStretch()
 
+        # Sắp xếp các nút bấm
         button_layout = QVBoxLayout()
         button_layout.setAlignment(Qt.AlignmentFlag.AlignHCenter)
 
@@ -210,6 +231,14 @@ class Interface(QWidget):
         button_layout.addWidget(self.redo_btn)
 
         self.right_layout.addLayout(button_layout)
+
+        # --------------------------------------------------
+        # SẮP XẾP THỨ TỰ CÁC TRANG
+        # --------------------------------------------------
+        self.stack.addWidget(self.page_create_file)
+        self.stack.addWidget(self.page_labeling)
+        self.stack.addWidget(self.page_num_sample)
+        self.stack.addWidget(self.page_collect)
 
 
 # ----------------------------------------------------------
@@ -245,7 +274,7 @@ class CollectModule(Interface):
         self.save_label_file_btn1.clicked.connect(self.save_label_file1)
         self.save_label_file_btn2.clicked.connect(self.save_label_file2)
 
-        self.confirm_btn.clicked.connect(self.confirm_label)
+        self.confirm_lb_btn.clicked.connect(self.confirm_label)
         self.num_samp_confirm_btn.clicked.connect(self.confirm_num_sample)
 
         self.start_btn.clicked.connect(self.enable_collect_data)
@@ -280,6 +309,8 @@ class CollectModule(Interface):
         self.label_dir = Path(CFG.labels_dir) / f"{self.label_file_name}.json"
         Path(self.label_dir).parent.mkdir(exist_ok=True)
 
+        self.labels = {}
+        
         with open(self.label_dir, "w") as f:
             json.dump(self.labels, f, indent=2)
 
@@ -492,9 +523,6 @@ class CollectModule(Interface):
         self.label_input.clear()
 
         self.lm_list.clear()
-
-        with open(self.label_dir, "w") as f:
-            json.dump({}, f)
 
         self.start_btn.setEnabled(True)
         self.label_dir = None
