@@ -1,5 +1,5 @@
 # ==================================================
-# DETECTOR
+# DETECTOR MODULE
 # ==================================================
 # File name   : _detector.py
 # Description : Module xử lý dữ liệu từ camera
@@ -40,7 +40,7 @@ from _config     import color
 from _tts_module import delete_speaker
 
 # -----------------------------------
-# DETECTOR CONFIGURATIONS
+# CONFIGURATIONS
 # -----------------------------------
 # 
 # max_num_hand             : 2 hands
@@ -63,7 +63,7 @@ COL = color()
 
 
 # --------------------------------------------
-# HAND SIGN DETECTOR
+# DETECTOR
 # --------------------------------------------
 # 
 # Trích xuất đặc trưng.

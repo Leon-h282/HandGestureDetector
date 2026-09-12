@@ -1,5 +1,5 @@
 # =========================================================
-# MAIN MODULE
+# HAND GESTURE DETECTOR
 # =========================================================
 # File name   : A_main.py
 # Description : Module điều khiển chính
