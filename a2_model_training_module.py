@@ -37,7 +37,7 @@ from pathlib import Path
 import os
 import json
 import time
-import tensorflow as tf
+from _config import config as cf
 
 from PySide6.QtCore import QThread
 from PySide6.QtCore import Signal
@@ -45,7 +45,6 @@ from PySide6.QtCore import Qt
 
 from PySide6.QtGui import QPixmap
 
-from PySide6.QtWidgets import QApplication
 from PySide6.QtWidgets import QHBoxLayout
 from PySide6.QtWidgets import QVBoxLayout
 from PySide6.QtWidgets import QPushButton
@@ -67,13 +66,9 @@ from PySide6.QtWidgets import QLineEdit
 #               huấn luyện.
 # ---------------------------------------------------------
 
-class config:
+class config(cf):
     def __init__(self):
-        self.data_dir   = "data/processed"
-        self.labels_dir = "labels"
-
-        self.models_dir = "models"
-        self.model_name = "model"
+        super().__init__()
 
         self.training_plot_dir = "data/training_plot"
 
@@ -83,20 +78,6 @@ class config:
         self.epochs    = 150
         self.test_size = 0.25
         self.patience  = 20
-
-        self.bar_style = """
-            QProgressBar {
-                border: 1px solid #555;
-                border-radius: 6px;
-                text-align: center;
-                background-color: #222;
-                height: 20px;
-            }
-            QProgressBar::chunk {
-                background-color: #30C77C;
-                border-radius: 6px;
-            }
-        """
 
 CFG = config()
 
@@ -200,6 +181,7 @@ def plot_history(history, train_plot: QLabel):
     save_time = f"{t.tm_year}{t.tm_mon}{t.tm_mday}_{t.tm_hour}_{t.tm_min}"
     save_path = f"{CFG.training_plot_dir}/train_plot_{save_time}.png"
 
+    # Tạo thư mục lưu biểu đồ
     Path(save_path).parent.mkdir(parents=True, exist_ok=True)
 
     plt.tight_layout()
@@ -246,6 +228,7 @@ def plot_confusion_matrix(y_true, y_pred, label_map, cfs_matrix: QLabel):
     save_time = f"{t.tm_year}{t.tm_mon}{t.tm_mday}_{t.tm_hour}_{t.tm_min}"
     save_path = f"{CFG.training_plot_dir}/confusion_matrix_{save_time}.png"
 
+    # Tạo thư mục lưu biểu đồ
     Path(save_path).parent.mkdir(parents=True, exist_ok=True)
     
     plt.tight_layout()
@@ -367,7 +350,13 @@ class TrainingWorker(QThread):
             "train_acc" : train_history.history["accuracy"],
             "val_acc"   : train_history.history["val_accuracy"],
         }
-        model.save(os.path.join(CFG.models_dir, f"{self.model_name}.keras"))
+
+        # Tạo thư mục lưu model
+        model_save_path = CFG.models_dir, f"{self.model_name}.keras"
+        Path(model_save_path).parent.mkdir(exist_ok=True)
+
+        # Lưu model
+        model.save(model_save_path)
 
         y_pred_probs = model.predict(x_test)
         y_pred = np.argmax(y_pred_probs, axis=1)
@@ -385,27 +374,33 @@ class TrainingModule(QWidget):
         self.stack = QStackedWidget()
         self.mainLayout.addWidget(self.stack)
 
-        # ---- Page 1: chọn label file ----
+        # ---------------------------------------
+        # TRANG 1 - CHỌN BỘ NHÃN & ĐẶT TÊN MODEL
+        # ---------------------------------------
         self.MnL_page = QWidget()
         self.MnL_page_layout = QVBoxLayout(self.MnL_page)
 
+        # Droplist chọn bộ nhãn
         self.labels_drop_list = QComboBox()
         self.labels_drop_list.setFixedWidth(200)
         self.labels_drop_list.addItems(os.listdir(CFG.labels_dir))
 
+        # Ô nhập liệu nhập tên model
         self.model_name_input = QLineEdit()
         self.model_name_input.setFixedWidth(200)
         self.model_name_input.setPlaceholderText("Enter your model name")
-        self.model_name_input.setText("model")
 
-        self.confirm_btn = QPushButton("Confirm")
-        self.confirm_btn.setFixedWidth(90)
-        self.confirm_btn.clicked.connect(self.on_confirm_labels)
-
+        # Nút tải lại để cập nhật các file bộ nhãn mới
         self.refresh_btn = QPushButton("Refresh")
         self.refresh_btn.setFixedWidth(90)
         self.refresh_btn.clicked.connect(self.refresh_label_list)
 
+        # Nút xác nhận bộ nhãn và tên model
+        self.confirm_btn = QPushButton("Confirm")
+        self.confirm_btn.setFixedWidth(90)
+        self.confirm_btn.clicked.connect(self.confirm_MnL)
+
+        # Sắp xếp bố cục trang
         self.MnL_page_layout.addStretch()
         self.MnL_page_layout.addWidget(QLabel("Select labels"))
         self.MnL_page_layout.addWidget(self.labels_drop_list)
@@ -415,7 +410,10 @@ class TrainingModule(QWidget):
         self.MnL_page_layout.addWidget(self.confirm_btn)
         self.MnL_page_layout.addStretch()
 
-        # ---- Page 2: training progress ----
+        # ---------------------------------------
+        # TRANG 2 - BẮT ĐẦU HUẤN LUYỆN
+        # ---------------------------------------
+        # Khởi tạo trang
         self.training_page = QWidget()
         self.training_page_layout = QVBoxLayout(self.training_page)
 
@@ -423,59 +421,94 @@ class TrainingModule(QWidget):
         self.progress_bar = QProgressBar()
         self.progress_bar.setStyleSheet(CFG.bar_style)
 
+        # Nút bắt đầu huấn luyện
         self.start_training_btn = QPushButton("Start training")
-        self.start_training_btn.setFixedWidth(110)
+        self.start_training_btn.setFixedWidth(CFG.button_width)
         self.start_training_btn.clicked.connect(self.start_training)
 
+        # Nút quay lại trang trước
+        self.go_back_btn = QPushButton("Back")
+        self.go_back_btn.setFixedWidth(CFG.button_width)
+        self.go_back_btn.clicked.connect(
+            lambda: (
+                self.stack.setCurrentWidget(
+                    self.MnL_page
+                )
+            )
+        )
+
+        # Sắp xếp bố cục trang
         self.training_page_layout.addStretch()
         self.training_page_layout.addWidget(self.status_label)
         self.training_page_layout.addWidget(self.progress_bar)
         self.training_page_layout.addWidget(self.start_training_btn)
+        self.training_page_layout.addWidget(self.go_back_btn)
         self.training_page_layout.addStretch()
 
-        # ---- Page 3: result ----
+        # ---------------------------------------
+        # TRANG 3 - KẾT QUẢ HUẤN LUYỆN
+        # ---------------------------------------
         self.result_page = QWidget()
         self.result_page_layout = QVBoxLayout(self.result_page)
 
+        # Bảng thông sô kết quả huấn luyện
         self.metrics_table = QTableWidget()
-        self.metrics_table.setFixedWidth(300)
+        self.metrics_table.setFixedWidth(500)  # chiều rộng bảng
 
         self.plot_layout = QHBoxLayout()
 
+        # Ô hiển thị training plot
         self.train_plot = QLabel()
         self.train_plot.setFixedSize(700, 350)
+
+        # Ô hiển thị confusion matrix
         self.cfs_matrix = QLabel()
         self.cfs_matrix.setFixedSize(400, 350)
 
+        # Sắp xếp các biểu đò
         self.plot_layout.addWidget(self.train_plot)
         self.plot_layout.addWidget(self.cfs_matrix)
 
+        # Nút quay về trang đầu, huấn luyện lại
         self.redo_btn = QPushButton("Redo")
         self.redo_btn.setFixedWidth(90)
         self.redo_btn.clicked.connect(self.redo)
 
+        # Sắp xếp bố cục trang
         self.result_page_layout.addStretch()
         self.result_page_layout.addLayout(self.plot_layout)
         self.result_page_layout.addWidget(self.metrics_table)
         self.result_page_layout.addWidget(self.redo_btn)
         self.result_page_layout.addStretch()
 
+        # ---------------------------------------
+        # SẮP XẾP THỨ TỰ CÁC TRANG
+        # ---------------------------------------
         self.stack.addWidget(self.MnL_page)
         self.stack.addWidget(self.training_page)
         self.stack.addWidget(self.result_page)
 
         self.selected_labels_file = None
 
+    # Tải lại để cập nhật các file bộ nhãn mới
     def refresh_label_list(self):
         self.labels_drop_list.clear()
         self.labels_drop_list.addItems(os.listdir(CFG.labels_dir))
 
-    def on_confirm_labels(self):
+    # Xác nhận bộ nhãn và tên model
+    def confirm_MnL(self):
+        if not self.model_name_input.text():
+            self.model_name_input.setText(
+                "Please enter a model name"
+            )
+            return
+        
         self.selected_labels_file = self.labels_drop_list.currentText()
         self.model_name = self.model_name_input.text()
 
         self.stack.setCurrentWidget(self.training_page)
 
+    # Bắt đầu huấn luyện model
     def start_training(self):
         if not self.selected_labels_file:
             self.status_label.setText("⚠️ Chưa chọn bộ nhãn!")
@@ -525,8 +558,7 @@ class TrainingModule(QWidget):
 
 
 # def main():
-#     os.makedirs(CFG.models_dir, exist_ok=True)
-#     os.makedirs(CFG.training_plot_dir, exist_ok=True)
+#     from PySide6.QtWidgets import QApplication
 
 #     device = tf.config.list_physical_devices('GPU')
 #     print(f"GPU available: {device}" if device else "GPU not found. Using CPU")

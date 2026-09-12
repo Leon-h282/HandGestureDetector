@@ -280,7 +280,7 @@ class CollectModule(Interface):
         self.start_btn.clicked.connect(self.enable_collect_data)
         self.redo_btn.clicked.connect(self.reset)
 
-        # QTimer - update frame every 30ms
+        # QTimer - Cập nhật frame mỗi 30ms
         self.timer = QTimer()
         self.timer.timeout.connect(self.run_camera)
 
@@ -289,10 +289,10 @@ class CollectModule(Interface):
         self.off_btn.clicked.connect(self.timer.stop)
         self.off_btn.clicked.connect(self.stop_camera)
 
-        # Progress bars
+        # Số frame đã xử lý
         self.frame_count = 0
         
-    # ghi nhãn vào bộ nhãn.
+    # Ghi nhãn vào bộ nhãn
     def confirm_label(self):
         label = self.label_input.text().strip()
         self.labels[str(self.label_idx)] = label
@@ -300,7 +300,7 @@ class CollectModule(Interface):
 
         self.label_input.setText("")
 
-    # tạo file để ghi bộ nhãn.
+    # Tạo file để ghi bộ nhãn.
     def save_label_file1(self):
         self.label_file_name = self.label_name_input.text().strip()
         if not self.label_file_name:
@@ -317,7 +317,7 @@ class CollectModule(Interface):
         self.stack.setCurrentWidget(self.page_labeling)
 
 
-    # lưu bộ nhãn và0 file ghi bộ nhãn.
+    # Lưu bộ nhãn và0 file ghi bộ nhãn.
     def save_label_file2(self):
         with open(self.label_dir, "w") as f:
             json.dump(self.labels, f, indent=2)
@@ -345,12 +345,11 @@ class CollectModule(Interface):
 
         self.timer.start(30)
 
-    # --------------------------------------------------------
-    # Function name : run_camera
-    # Description   : Vòng lặp camera. Tạo đường dẫn lưu
-    #                 dữ liệu. thu thập dữ và xử lý dữ liệu
-    #                 từ camera. Lưu file dữ liệu đã xử lý.
-    # --------------------------------------------------------
+    """
+    Vòng lặp camera. Tạo đường dẫn lưu
+    dữ liệu. thu thập dữ và xử lý dữ liệu
+    từ camera. Lưu file dữ liệu đã xử lý.
+    """
     def run_camera(self):
         data_save_dir = Path(CFG.data_dir)
         data_save_dir.mkdir(parents=True, exist_ok=True)
@@ -381,13 +380,18 @@ class CollectModule(Interface):
         else:
             self.start_btn.setDisabled(True)
 
+        # Cập nhật quá trình thu thập dữ liệu
         self.draw_progress_bar(total)
 
+        # Cập nhật frame mới
         self.update_frame(frame)
 
     def enable_collect_data(self):
         self.start_collecting_data = not self.start_collecting_data
 
+    """
+    Xử lý dữ liệu, lưu dữ liệu, cập nhật tiến độ.
+    """
     def collect_data(self, data_save_dir, curr_class):
         if self.start_collecting_data:
             self.data_file_idx = self.count_seq(data_save_dir, curr_class)
@@ -425,17 +429,24 @@ class CollectModule(Interface):
             else:
                 self.data_file_idx = 0
 
-    # Cập nhật giá trị trên các thanh xác suất
+    """
+    Hiển thị tiến độ thu thập dữ liệu
+    bằng dạng progress bar.
+    """
+    # Phần trăm khung hình đã xử lý
     def draw_frame_count_bar(self):
-        # Frame count
+        # Cập nhật giá trị trên frame_count_bar
         self.frame_count_bar.setValue(
             int(100*self.frame_count/self.timestep)
         )
+
+        # Reset frame_count về 0 sau khi đủ video
         if self.frame_count >= self.timestep:
             self.frame_count = 0
 
+    # Phần trăm số dữ liệu đã thu
     def draw_progress_bar(self, total):
-        # Sequence count
+        # Đếm số chuỗi đã thu
         self.seq_count_bar.setValue(
             int(100*total/(self.num_sample*len(self.labels)))
         )
@@ -534,6 +545,7 @@ class CollectModule(Interface):
 
 
 # def main():
+#     from PySide6.QtWidgets import QApplication
 #     app = QApplication()
 
 #     window = CollectModule()
