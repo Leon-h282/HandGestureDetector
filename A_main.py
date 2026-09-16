@@ -59,6 +59,8 @@ from b2_module2_multi_signs   import Module2
 
 import resources_rc
 import sys
+import os
+from pathlib import Path
 
 from PySide6.QtWidgets import QApplication
 from PySide6.QtWidgets import QHBoxLayout
@@ -67,9 +69,17 @@ from PySide6.QtWidgets import QWidget
 from PySide6.QtWidgets import QPushButton
 from PySide6.QtWidgets import QStackedWidget
 from PySide6.QtWidgets import QLabel
+from PySide6.QtWidgets import QComboBox
 
 from PySide6.QtGui  import QIcon
 from PySide6.QtGui  import QPixmap
+
+
+# -------------------------------------------------------------
+# CONFIGURATIONS
+# -------------------------------------------------------------
+USERS_DIR = "Users"
+button_width = 150
 
 
 # -------------------------------------------------------------
@@ -135,6 +145,33 @@ class HomaPage(QWidget):
 
         home_page_layout.addWidget(stack)
         home_page_layout.addLayout(button_layout)
+
+
+# -------------------------------------------------------------
+# SELECT USER PAGE
+# -------------------------------------------------------------
+class SelectUserPage(QWidget):
+    def __init__(self):
+        super().__init__()
+
+        self.user_list = QComboBox()
+
+        # Hiển thị danh sách 
+        os.makedirs(USERS_DIR, exist_ok=True)
+        self.user_list.addItems(os.listdir(USERS_DIR))
+
+        self.select_btn = QPushButton("Select user name")
+        self.select_btn.setFixedWidth(button_width)
+        self.select_btn.clicked.connect(self.select_user)
+
+    def select_user(self):
+        if (
+            not self.user_list.currentText() or
+            self.user_list.currentText() not in os.listdir(USERS_DIR)
+        ):
+            self.user_list.setCurrentText("Invalid user name")
+        else:
+            self.user_name = self.user_list.currentText()
 
 
 # -------------------------------------------------------------
